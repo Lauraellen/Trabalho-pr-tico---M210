@@ -196,6 +196,15 @@ def gerar_novo_quadro(elemento_pivo, funcao_objetivo=None, restricoes_na_forma_c
 
         quadros.append(new_quadro)
 
-teste = getGreatValues()
-print('VALORES OTIMOS => ', teste)
+valores_otimo = getGreatValues()
+print('VALORES OTIMOS => ', valores_otimo)
 
+def obter_lucro_total(valores_otimos):
+    lucro_total = 0
+    for indice in valores_otimos:
+        indice_variavel = variaveis_decisao.index(indice["variavel"])
+        lucro_total += coeficientes[indice_variavel] * indice["valor_otimo"]
+    return lucro_total
+
+lucro_total = obter_lucro_total(valores_otimo)
+print('Lucro total => ', lucro_total)
