@@ -208,3 +208,24 @@ def obter_lucro_total(valores_otimos):
 
 lucro_total = obter_lucro_total(valores_otimo)
 print('Lucro total => ', lucro_total)
+
+def obter_preco_sombra():
+    # valores_otimos = gerar_valores_otimos(variaveis_input, coeficientes_fo_input, restricoes_input)
+    ultimo_quadro = quadros[-1]
+    precos_sombra = []
+    for index, valor in enumerate(ultimo_quadro["valores"][0]):
+
+        if ultimo_quadro["colunas"][index-1] and index >= (len(ultimo_quadro["valores"][0]) - len(variaveisAuxiliares) - 1):
+            precos_sombra.append({
+                "variavel": ultimo_quadro["colunas"][index-1],
+                "precoSombra": valor
+            })
+
+    # for i, preco_sombra in enumerate(precos_sombra):
+    #     precos_sombra[i]["variavel"] = 'Restrição' + [i]
+
+    return precos_sombra
+
+preco_sombra = obter_preco_sombra()
+#ajustar retorno do preço sombra
+print('Preço sombra => ', preco_sombra)
