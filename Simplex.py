@@ -28,32 +28,35 @@ def getRestricts(variaveis):
     num_restricoes = int(input("Quantas restrições você deseja adicionar? "))
 
     restricoes = []
-
+    variaveis_restricao = []
     for i in range(num_restricoes):
         expressao = []
+
         for j in range(len(variaveis)):
             coeficiente = float(input(f"Digite o coeficiente para a variável {variaveis[j]} na restrição {i + 1}: "))
             expressao.append(coeficiente)
 
         sinal = input(f"Digite o sinal de desigualdade (<= ou >=) para a restrição {i + 1}: ")
         valor = float(input(f"Digite o valor para a restrição {i + 1}: "))
+        restricao_nome = input(f"Digite o nome para a restrição {i + 1}: ")
 
+        variaveis_restricao.append(restricao_nome);
         # Adiciona os coeficientes, sinal e valor à lista da restrição
         expressao.extend([sinal, valor])
 
         # Adiciona a lista da restrição à lista de restrições
         restricoes.append(expressao)
 
-    return restricoes
+    return restricoes, variaveis_restricao
 
 
 # Exemplo de uso
 variaveis_decisao = addVariablesDecision()
 funcao_objetivo_resultante, coeficientes = createFunction(variaveis_decisao)
-restricoes_resultantes = getRestricts(variaveis_decisao)
+restricoes_resultantes, restricoes_nome = getRestricts(variaveis_decisao)
 variaveisAuxiliares = []
 quadros = []
-
+print(restricoes_nome)
 def getGreatValues():
     funcao_objetivo = [-coeficiente for coeficiente in coeficientes]
     funcao_objetivo.append(0)
@@ -221,8 +224,10 @@ def obter_preco_sombra():
                 "precoSombra": valor
             })
 
-    # for i, preco_sombra in enumerate(precos_sombra):
-    #     precos_sombra[i]["variavel"] = 'Restrição' + [i]
+
+    for i, preco_sombra in enumerate(precos_sombra):
+        if(i < len(restricoes_nome)):
+            precos_sombra[i]["variavel"] = restricoes_nome[i]
 
     return precos_sombra
 
