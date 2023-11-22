@@ -50,13 +50,6 @@ def getRestricts(variaveis):
     return restricoes, variaveis_restricao
 
 
-# Exemplo de uso
-variaveis_decisao = addVariablesDecision()
-funcao_objetivo_resultante, coeficientes = createFunction(variaveis_decisao)
-restricoes_resultantes, restricoes_nome = getRestricts(variaveis_decisao)
-variaveisAuxiliares = []
-quadros = []
-print(restricoes_nome)
 def getGreatValues():
     funcao_objetivo = [-coeficiente for coeficiente in coeficientes]
     funcao_objetivo.append(0)
@@ -199,8 +192,6 @@ def gerar_novo_quadro(elemento_pivo, funcao_objetivo=None, restricoes_na_forma_c
 
         quadros.append(new_quadro)
 
-valores_otimo = getGreatValues()
-print('VALORES OTIMOS => ', valores_otimo)
 
 def obter_lucro_total(valores_otimos):
     lucro_total = 0
@@ -209,8 +200,7 @@ def obter_lucro_total(valores_otimos):
         lucro_total += coeficientes[indice_variavel] * indice["valor_otimo"]
     return lucro_total
 
-lucro_total = obter_lucro_total(valores_otimo)
-print('Lucro total => ', lucro_total)
+
 
 def obter_preco_sombra():
     # valores_otimos = gerar_valores_otimos(variaveis_input, coeficientes_fo_input, restricoes_input)
@@ -231,6 +221,72 @@ def obter_preco_sombra():
 
     return precos_sombra
 
+def get_new_values(restricoes_nome):
+    new_values = []
+    # Recebe valores do usuário de acordo com o tamanho fornecido
+    for i, value in enumerate(restricoes_nome):
+        novo_valor = float(input(f"Digite o novo valor para {value}: "))
+        new_values.append(novo_valor)
+
+    return new_values
+
+def verificar_viabilidade_e_novo_lucro(variacoes_de_disponibilidade_input):
+    ultimo_quadro = quadros[-1]
+    viavel = verificar_viabilidade(ultimo_quadro, variacoes_de_disponibilidade_input)
+
+    if not viavel:
+        return False
+
+    novo_lucro = 0
+    for index, valor in enumerate(ultimo_quadro['valores'][0]):
+        if index >= (len(ultimo_quadro['valores'][0]) - len(variacoes_de_disponibilidade_input) - 1):
+            if index < (len(ultimo_quadro['valores'][0]) - 1):
+                novo_lucro += variacoes_de_disponibilidade_input[index - (len(ultimo_quadro['valores'][0]) - len(variacoes_de_disponibilidade_input) - 1)] * valor
+
+    return novo_lucro, viavel
+
+def verificar_viabilidade(ultimo_quadro, variacoes_de_disponibilidade):
+    viavel = True
+    for indice, valor in enumerate(ultimo_quadro['valores']):
+        if indice != 0:
+            valor_soma = 0
+            for i, v in enumerate(valor):
+                if i >= (len(valor) - len(variacoes_de_disponibilidade) - 1):
+                    if i == (len(valor) - 1):
+                        valor_soma += v
+                    else:
+                        valor_soma += variacoes_de_disponibilidade[i - (len(valor) - len(variacoes_de_disponibilidade) - 1)] * v
+
+            if valor_soma < 0:
+                viavel = False
+
+    return viavel
+
+# Exemplo de uso
+variaveis_decisao = addVariablesDecision()
+funcao_objetivo_resultante, coeficientes = createFunction(variaveis_decisao)
+restricoes_resultantes, restricoes_nome = getRestricts(variaveis_decisao)
+variaveisAuxiliares = []
+quadros = []
+
+
+valores_otimo = getGreatValues()
+print('VALORES OTIMOS => ', valores_otimo)
+
+lucro_total = obter_lucro_total(valores_otimo)
+print('Lucro total => ', lucro_total)
+
 preco_sombra = obter_preco_sombra()
-#ajustar retorno do preço sombra
 print('Preço sombra => ', preco_sombra)
+
+alterar_disponibilidade = int(input("Deseja alterar a disponibilidade de algum recurso? 1 - SIM | 0 - NÃO"))
+
+if (alterar_disponibilidade == 1):
+    new_values = get_new_values(restricoes_nome)
+    novo_lucro, viavel = verificar_viabilidade_e_novo_lucro(new_values)
+    print("É viável" if viavel else "Não é viavel")
+    print("Novo lucro ", novo_lucro+lucro_total)
+    print("Diferença ", novo_lucro)
+
+else:
+    print('FIM')
