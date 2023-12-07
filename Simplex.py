@@ -1,4 +1,4 @@
-def addVariablesDecision():
+def adicionarVariaveisDecisao():
 
     num_variaveis = int(input("Quantas variáveis de decisão você deseja inserir? "))
 
@@ -10,7 +10,7 @@ def addVariablesDecision():
 
     return variaveis
 
-def createFunction(variaveis):
+def criarFuncaoObjetivo(variaveis):
     coeficientes = []
     for variavel in variaveis:
         coeficiente = float(input(f"Digite o coeficiente para a variável {variavel}: "))
@@ -24,7 +24,7 @@ def createFunction(variaveis):
 
     return funcao_objetivo, coeficientes
 
-def getRestricts(variaveis):
+def montarRestricoes(variaveis):
     num_restricoes = int(input("Quantas restrições você deseja adicionar? "))
 
     restricoes = []
@@ -50,7 +50,7 @@ def getRestricts(variaveis):
     return restricoes, variaveis_restricao
 
 
-def getGreatValues():
+def valoresOtimos():
 
     #forma padrão
     funcao_objetivo = [-coeficiente for coeficiente in coeficientes]
@@ -281,16 +281,16 @@ def verificar_viabilidade(ultimo_quadro, variacoes_de_disponibilidade):
     return viavel
 
 # Exemplo de uso
-variaveis_decisao = addVariablesDecision()
-funcao_objetivo_resultante, coeficientes = createFunction(variaveis_decisao)
+variaveis_decisao = adicionarVariaveisDecisao()
+funcao_objetivo_resultante, coeficientes = criarFuncaoObjetivo(variaveis_decisao)
 print('Função objetivo: ', funcao_objetivo_resultante)
-restricoes_resultantes, restricoes_nome = getRestricts(variaveis_decisao)
+restricoes_resultantes, restricoes_nome = montarRestricoes(variaveis_decisao)
 print('Restrições: ', restricoes_resultantes)
 variaveisAuxiliares = []
 quadros = []
 
 
-valores_otimo = getGreatValues()
+valores_otimo = valoresOtimos()
 print('VALORES OTIMOS => ', valores_otimo)
 
 lucro_total = obter_lucro_total(valores_otimo)
@@ -306,7 +306,7 @@ if (alterar_disponibilidade == 1):
     novo_lucro, viavel = verificar_viabilidade_e_novo_lucro(new_values)
     print("É viável" if viavel else "Não é viável")
     print("Novo lucro ", novo_lucro+lucro_total)
-    print("Diferença ", novo_lucro)
+    print("Lucro: ", novo_lucro)
 
 else:
     print('FIM')
